@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>多多买菜 · 专业菜谱 & 一键购买</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f7f4ef 0%, #ece8e0 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            padding: 1.5rem;
+            color: #2e3b3a;
+        }
+
+        .master-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 3rem;
+            box-shadow: 0 35px 65px -25px rgba(70, 60, 50, 0.35), 0 0 0 1px rgba(255, 245, 235, 0.6) inset;
+            width: 100%;
+            max-width: 1400px;
+            padding: 2.5rem 2.5rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            color: #1f5e5b;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.2rem;
+        }
+
+        h1 span {
+            background: rgba(120, 170, 150, 0.25);
+            color: #2b6e5c;
+            font-size: 1.1rem;
+            font-weight: 400;
+            padding: 0.3rem 1.5rem;
+            border-radius: 60px;
+            border: 1px solid rgba(150, 200, 170, 0.8);
+            backdrop-filter: blur(4px);
+        }
+
+        .sub {
+            font-size: 1.1rem;
+            color: #4f7b71;
+            font-weight: 300;
+            margin-bottom: 2rem;
+            border-left: 5px solid #8fc1b0;
+            padding-left: 1.3rem;
+            background: rgba(220, 245, 235, 0.3);
+            border-radius: 0 18px 18px 0;
+        }
+
+        /* 分类标签区域（八分类） */
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .category-card {
+            flex: 1 1 170px;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(5px);
+            border-radius: 2rem;
+            padding: 1.5rem 1.2rem;
+            box-shadow: 0 10px 18px -12px #809080, 0 0 0 1px rgba(210, 230, 210, 0.5) inset;
+        }
+
+        .category-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1f5e5b;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .ingredient-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            max-height: 250px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .ingredient-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 0.2rem 0;
+        }
+
+        .ingredient-item input[type="checkbox"] {
+            width: 1.2rem;
+            height: 1.2rem;
+            accent-color: #1f5e5b;
+            border-radius: 0.4rem;
+            cursor: pointer;
+        }
+
+        .ingredient-name {
+            color: #2b4f48;
+            font-weight: 450;
+        }
+
+        /* 口味选择器 */
+        .taste-panel {
+            background: rgba(255, 250, 240, 0.5);
+            backdrop-filter: blur(4px);
+            border-radius: 3rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 2rem;
+            border: 1px solid rgba(200, 220, 200, 0.6);
+        }
+
+        .taste-label {
+            font-weight: 500;
+            color: #1f5e5b;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .taste-options {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .taste-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .taste-option input[type="radio"] {
+            width: 1.2rem;
+            height: 1.2rem;
+            accent-color: #1f5e5b;
+        }
+
+        .taste-option label {
+            font-size: 1.1rem;
+            color: #2e4f45;
+        }
+
+        /* 已选菜品展示区 */
+        .selected-area {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(4px);
+            border-radius: 2rem;
+            padding: 1.3rem 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid #c5ddcf;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .selected-label {
+            font-weight: 500;
+            color: #1f5e5b;
+            font-size: 1.2rem;
+        }
+
+        .selected-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            flex: 1;
+        }
+
+        .chip {
+            background: #d1e6db;
+            border-radius: 2rem;
+            padding: 0.4rem 1.2rem;
+            font-size: 1rem;
+            color: #1f5e5b;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            box-shadow: 0 4px 8px -4px #a0b8a8;
+        }
+
+        .chip button {
+            background: none;
+            border: none;
+            color: #1f5e5b;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.4rem;
+            height: 1.4rem;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            transition: 0.1s;
+        }
+
+        .chip button:hover {
+            background: #e07c7c;
+            color: white;
+        }
+
+        .empty-selected {
+            color: #90a89c;
+            font-style: italic;
+        }
+
+        /* 推荐按钮 */
+        .recipe-btn {
+            background: #1f5e5b;
+            border: none;
+            color: white;
+            font-size: 1.6rem;
+            font-weight: 500;
+            padding: 1.3rem 0;
+            border-radius: 4rem;
+            width: 100%;
+            margin: 1rem 0 2.5rem;
+            cursor: pointer;
+            box-shadow: 0 24px 36px -16px #1f5e5b80, 0 1px 4px rgba(255,255,255,0.3) inset;
+            transition: 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: linear-gradient(115deg, #1f5e5b, #348f7a);
+        }
+
+        .recipe-btn:hover {
+            background: linear-gradient(115deg, #2d7a70, #45b29a);
+            transform: translateY(-3px);
+            box-shadow: 0 36px 48px -20px #1f5e5b;
+        }
+
+        /* 菜谱结果展示区 - 多卡片网格 */
+        .recipe-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .recipe-card {
+            background: rgba(250, 255, 245, 0.6);
+            backdrop-filter: blur(6px);
+            border-radius: 2rem;
+            padding: 1.8rem 1.5rem;
+            border: 1px solid #c5ddcf;
+            box-shadow: 0 15px 25px -18px #2b6e5c;
+            transition: transform 0.2s;
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .recipe-card .recipe-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1f5e5b;
+            margin-bottom: 0.8rem;
+        }
+
+        .recipe-card .recipe-desc {
+            font-size: 0.95rem;
+            color: #3d655c;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .recipe-card .ingredients-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1f5e5b;
+            margin: 0.8rem 0 0.5rem;
+            border-bottom: 1px dashed #a0c8b8;
+            padding-bottom: 0.2rem;
+        }
+
+        .recipe-card .ingredients-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .recipe-card .ingredient-item-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 1.5rem;
+            padding: 0.2rem 0.6rem;
+            font-size: 0.85rem;
+            color: #2d5a50;
+            border: 1px solid #cee6db;
+        }
+
+        .recipe-card .ingredient-item-detail .amount {
+            font-weight: 600;
+            color: #1f5e5b;
+            margin-left: auto;
+            background: #e5f3ec;
+            padding: 0.1rem 0.4rem;
+            border-radius: 20px;
+        }
+
+        .recipe-card .recipe-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            font-size: 0.9rem;
+            color: #4e7b6f;
+            border-top: 1px dashed #b0d0c0;
+            padding-top: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .recipe-card .buy-link {
+            display: inline-block;
+            background: #e67e22;
+            color: white;
+            text-decoration: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            border: 1px solid #f0b27a;
+            box-shadow: 0 4px 8px -4px #bf6f1e;
+            transition: 0.2s;
+        }
+
+        .recipe-card .buy-link:hover {
+            background: #d35400;
+        }
+
+        .no-recipe {
+            color: #a8beb4;
+            text-align: center;
+            padding: 2rem;
+            font-size: 1.2rem;
+            grid-column: 1 / -1;
+        }
+
+        .footnote {
+            margin-top: 2rem;
+            text-align: center;
+            color: #6d9b8c;
+            font-size: 0.9rem;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px solid rgba(150, 180, 160, 0.2);
+            margin: 1.5rem 0 0.5rem;
+        }
+
+        /* 滚动条美化 */
+        .ingredient-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        .ingredient-list::-webkit-scrollbar-track {
+            background: rgba(200,220,200,0.3);
+            border-radius: 10px;
+        }
+        .ingredient-list::-webkit-scrollbar-thumb {
+            background: #8fc1b0;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="master-card">
+        <h1>
+            🥬 多多买菜 · 专业菜谱
+            <span>分类单选 多菜谱推荐</span>
+        </h1>
+        <div class="sub">每类最多选一种，跨类可多选；点击按钮获得多个包含所选食材的专业菜谱</div>
+
+        <!-- 食材分类区域（八分类） -->
+        <div class="categories" id="categoriesContainer">
+            <!-- 蔬菜 -->
+            <div class="category-card">
+                <div class="category-title">🥦 蔬菜</div>
+                <div class="ingredient-list" id="cat-veg"></div>
+            </div>
+            <!-- 海鲜 -->
+            <div class="category-card">
+                <div class="category-title">🦐 海鲜</div>
+                <div class="ingredient-list" id="cat-sea"></div>
+            </div>
+            <!-- 肉类 -->
+            <div class="category-card">
+                <div class="category-title">🍖 肉类</div>
+                <div class="ingredient-list" id="cat-meat"></div>
+            </div>
+            <!-- 菌菇类 -->
+            <div class="category-card">
+                <div class="category-title">🍄 菌菇类</div>
+                <div class="ingredient-list" id="cat-mush"></div>
+            </div>
+            <!-- 火锅底料 -->
+            <div class="category-card">
+                <div class="category-title">🍲 火锅底料</div>
+                <div class="ingredient-list" id="cat-hotpot"></div>
+            </div>
+            <!-- 调味品（葱姜蒜等） -->
+            <div class="category-card">
+                <div class="category-title">🧄 调味品</div>
+                <div class="ingredient-list" id="cat-spice"></div>
+            </div>
+            <!-- 火锅配菜 -->
+            <div class="category-card">
+                <div class="category-title">🔥 火锅配菜</div>
+                <div class="ingredient-list" id="cat-hotpot-ingredients"></div>
+            </div>
+            <!-- 酱料/调味料 -->
+            <div class="category-card">
+                <div class="category-title">🥫 酱料/调味料</div>
+                <div class="ingredient-list" id="cat-sauce"></div>
+            </div>
+        </div>
+
+        <!-- 口味选择 -->
+        <div class="taste-panel">
+            <div class="taste-label">👅 口味偏好</div>
+            <div class="taste-options">
+                <div class="taste-option">
+                    <input type="radio" name="taste" id="taste-light" value="清淡" checked>
+                    <label for="taste-light">清淡</label>
+                </div>
+                <div class="taste-option">
+                    <input type="radio" name="taste" id="taste-heavy" value="重口">
+                    <label for="taste-heavy">重口</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- 已选菜品展示区 -->
+        <div class="selected-area">
+            <span class="selected-label">🛒 已选菜品</span>
+            <div class="selected-chips" id="selectedChips">
+                <span class="empty-selected">暂无，点击上方勾选添加</span>
+            </div>
+        </div>
+
+        <!-- 推荐菜谱按钮 -->
+        <button class="recipe-btn" id="recommendBtn">
+            <span>🍳</span> 推荐菜谱 <span>→</span>
+        </button>
+
+        <!-- 菜谱结果展示区（多卡片） -->
+        <div class="recipe-grid" id="recipeResult">
+            <div class="no-recipe">✨ 选择食材和口味后，点击按钮查看多个专业菜谱</div>
+        </div>
+
+        <hr>
+        <div class="footnote">
+            💡 每道菜谱均包含精准配料克数 · 点击链接前往多多买菜一键选购
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ---------- 食材数据 ----------
+            const ingredientsData = {
+                vegetables: ['青菜', '菠菜', '西兰花', '土豆', '西红柿', '豆角', '胡萝卜', '洋葱'],
+                seafood: ['虾', '鱼', '鱿鱼', '蛤蜊', '扇贝'],
+                meat: ['猪肉', '牛肉', '鸡肉', '羊肉', '排骨'],
+                mushroom: ['香菇', '金针菇', '杏鲍菇', '木耳', '口蘑'],
+                hotpot: ['麻辣锅底', '清汤锅底', '番茄锅底', '菌汤锅底'],
+                spice: ['葱', '姜', '蒜', '小尖椒', '干辣椒', '花椒', '八角', '香菜'],
+                hotpotIngredients: [
+                    '肥牛卷', '羊肉卷', '毛肚', '黄喉', '鸭肠', '虾滑', '鱼丸', 
+                    '午餐肉', '蟹肉棒', '藕片', '笋', '海带', '冻豆腐', '豆皮', 
+                    '生菜', '菠菜', '油麦菜', '娃娃菜', '土豆片', '红薯片', 
+                    '宽粉', '粉丝', '年糕', '鹌鹑蛋', '豆腐皮', '腐竹'
+                ],
+                sauce: [
+                    '照烧汁', '烧烤汁', '烧烤料', '黄豆酱', '豆瓣酱', '甜面酱', 
+                    '番茄酱', '蚝油', '生抽', '老抽', '醋', '料酒', '芝麻酱', 
+                    '蒜蓉辣酱', '孜然粉', '辣椒粉'
+                ]
+            };
+
+            // 分类映射，每个分类一个数组，用于实现同分类单选
+            const catMap = [
+                { id: 'cat-veg', list: ingredientsData.vegetables, category: 'veg' },
+                { id: 'cat-sea', list: ingredientsData.seafood, category: 'sea' },
+                { id: 'cat-meat', list: ingredientsData.meat, category: 'meat' },
+                { id: 'cat-mush', list: ingredientsData.mushroom, category: 'mush' },
+                { id: 'cat-hotpot', list: ingredientsData.hotpot, category: 'hotpot' },
+                { id: 'cat-spice', list: ingredientsData.spice, category: 'spice' },
+                { id: 'cat-hotpot-ingredients', list: ingredientsData.hotpotIngredients, category: 'hotpotIng' },
+                { id: 'cat-sauce', list: ingredientsData.sauce, category: 'sauce' }
+            ];
+
+            // 存储所有checkbox的引用，并按分类分组
+            let checkboxesByCategory = {};
+            catMap.forEach(cat => { checkboxesByCategory[cat.category] = []; });
+
+            let allCheckboxes = [];
+
+            // 渲染所有分类下的checkbox
+            function renderIngredients() {
+                catMap.forEach(cat => {
+                    const container = document.getElementById(cat.id);
+                    if (!container) return;
+                    container.innerHTML = '';
+                    cat.list.forEach(item => {
+                        const div = document.createElement('div');
+                        div.className = 'ingredient-item';
+                        const input = document.createElement('input');
+                        input.type = 'checkbox';
+                        input.value = item;
+                        input.id = `ing_${cat.category}_${item}_${Math.random().toString(36).substr(2, 6)}`;
+                        // 添加change事件实现同分类单选
+                        input.addEventListener('change', function(e) {
+                            if (this.checked) {
+                                // 取消同一分类下其他checkbox的选中
+                                checkboxesByCategory[cat.category].forEach(cb => {
+                                    if (cb !== this && cb.checked) {
+                                        cb.checked = false;
+                                    }
+                                });
+                            }
+                            updateSelectedChips();
+                        });
+                        div.appendChild(input);
+                        const label = document.createElement('label');
+                        label.htmlFor = input.id;
+                        label.className = 'ingredient-name';
+                        label.innerText = item;
+                        div.appendChild(label);
+                        container.appendChild(div);
+                        // 存储到分类分组和总列表
+                        checkboxesByCategory[cat.category].push(input);
+                        allCheckboxes.push(input);
+                    });
+                });
+            }
+
+            // 获取当前所有选中的食材
+            function getSelectedIngredients() {
+                return allCheckboxes.filter(cb => cb.checked).map(cb => cb.value);
+            }
+
+            // 更新已选菜品标签区域
+            function updateSelectedChips() {
+                const selected = getSelectedIngredients();
+                const chipsContainer = document.getElementById('selectedChips');
+                chipsContainer.innerHTML = '';
+                if (selected.length === 0) {
+                    chipsContainer.innerHTML = '<span class="empty-selected">暂无，点击上方勾选添加</span>';
+                } else {
+                    selected.forEach(item => {
+                        const chip = document.createElement('span');
+                        chip.className = 'chip';
+                        chip.innerHTML = `${item} <button data-value="${item}" onclick="removeIngredient(this)">✕</button>`;
+                        chipsContainer.appendChild(chip);
+                    });
+                }
+            }
+
+            // 移除单个食材 (通过chip上的按钮)
+            window.removeIngredient = function(btn) {
+                const value = btn.getAttribute('data-value');
+                const targetCheckbox = allCheckboxes.find(cb => cb.value === value && cb.checked);
+                if (targetCheckbox) {
+                    targetCheckbox.checked = false;
+                    updateSelectedChips();
+                }
+            };
+
+            // ---------- 菜谱库（与之前相同，完整） ----------
+            const recipeLibrary = [
+                { name: '清炒时蔬', description: '锅中热油，放入蒜末爆香，加入青菜快速翻炒，加盐调味即可。', ingredientsDetail: [{ name: '青菜', amount: '300克' }, { name: '蒜', amount: '10克' }, { name: '食用油', amount: '15克' }, { name: '盐', amount: '3克' }, { name: '鸡精', amount: '2克' }], taste: '清淡' },
+                { name: '蒜蓉西兰花', description: '西兰花焯水备用，热油爆香蒜末，倒入西兰花翻炒，加蚝油、盐调味。', ingredientsDetail: [{ name: '西兰花', amount: '350克' }, { name: '蒜', amount: '15克' }, { name: '蚝油', amount: '10克' }, { name: '盐', amount: '2克' }, { name: '食用油', amount: '12克' }], taste: '清淡' },
+                { name: '白灼虾', description: '虾洗净，锅中水开加姜片、料酒，放入虾煮至变色捞出，蘸生抽或姜醋汁。', ingredientsDetail: [{ name: '虾', amount: '400克' }, { name: '姜', amount: '10克' }, { name: '料酒', amount: '10克' }, { name: '生抽', amount: '15克' }, { name: '香醋', amount: '5克' }, { name: '葱', amount: '5克' }], taste: '清淡' },
+                { name: '蒜蓉粉丝蒸扇贝', description: '泡软的粉丝垫底，放上扇贝，淋上蒜蓉酱（蒜末、生抽、蚝油、热油），蒸5分钟，撒葱花。', ingredientsDetail: [{ name: '扇贝', amount: '6只' }, { name: '粉丝', amount: '50克' }, { name: '蒜', amount: '20克' }, { name: '生抽', amount: '10克' }, { name: '蚝油', amount: '5克' }, { name: '食用油', amount: '15克' }, { name: '葱', amount: '3克' }], taste: '清淡' },
+                { name: '菌菇汤', description: '各种菌菇切片，锅中热油炒香，加足量水煮20分钟，加盐、枸杞调味，鲜美无比。', ingredientsDetail: [{ name: '香菇', amount: '50克' }, { name: '金针菇', amount: '100克' }, { name: '杏鲍菇', amount: '80克' }, { name: '木耳', amount: '30克' }, { name: '枸杞', amount: '5克' }, { name: '盐', amount: '4克' }, { name: '食用油', amount: '10克' }, { name: '葱', amount: '5克' }, { name: '姜', amount: '5克' }], taste: '清淡' },
+                { name: '清汤火锅', description: '清汤锅底加姜片、葱段煮开，涮煮各类食材，蘸海鲜汁或麻酱，原汁原味。', ingredientsDetail: [{ name: '清汤锅底', amount: '1包' }, { name: '姜', amount: '5克' }, { name: '葱', amount: '10克' }, { name: '海鲜汁', amount: '20克' }, { name: '肥牛卷', amount: '200克' }, { name: '虾滑', amount: '150克' }, { name: '藕片', amount: '100克' }, { name: '生菜', amount: '100克' }, { name: '金针菇', amount: '100克' }, { name: '冻豆腐', amount: '150克' }], taste: '清淡' },
+                { name: '菌汤火锅', description: '菌汤锅底煮开，鲜美浓郁，适合涮各种菌菇和肉类。', ingredientsDetail: [{ name: '菌汤锅底', amount: '1包' }, { name: '香菇', amount: '50克' }, { name: '金针菇', amount: '100克' }, { name: '杏鲍菇', amount: '80克' }, { name: '肥牛卷', amount: '200克' }, { name: '虾滑', amount: '150克' }, { name: '娃娃菜', amount: '100克' }, { name: '豆皮', amount: '80克' }, { name: '粉丝', amount: '50克' }, { name: '葱', amount: '5克' }, { name: '姜', amount: '5克' }], taste: '清淡' },
+                { name: '番茄锅底火锅', description: '番茄锅底煮开，酸甜开胃，适合涮海鲜、肉类、蔬菜，尤其搭配菌菇。', ingredientsDetail: [{ name: '番茄锅底', amount: '1包' }, { name: '西红柿', amount: '1个' }, { name: '葱', amount: '5克' }, { name: '姜', amount: '5克' }, { name: '肥牛卷', amount: '200克' }, { name: '鱼丸', amount: '100克' }, { name: '蟹肉棒', amount: '100克' }, { name: '藕片', amount: '100克' }, { name: '生菜', amount: '100克' }], taste: '清淡' },
+                { name: '香菇滑鸡', description: '鸡肉切块加生抽、料酒、淀粉腌制，与香菇片、姜丝一同蒸15分钟，出锅撒葱花。', ingredientsDetail: [{ name: '鸡肉', amount: '400克' }, { name: '香菇', amount: '100克' }, { name: '生抽', amount: '15克' }, { name: '料酒', amount: '10克' }, { name: '淀粉', amount: '5克' }, { name: '姜', amount: '5克' }, { name: '葱', amount: '3克' }], taste: '清淡' },
+                { name: '蛤蜊蒸蛋', description: '蛤蜊吐沙后摆入盘中，倒入加盐的蛋液，蒸10分钟，淋蒸鱼豉油和香油，撒葱花。', ingredientsDetail: [{ name: '蛤蜊', amount: '200克' }, { name: '鸡蛋', amount: '3个' }, { name: '盐', amount: '2克' }, { name: '蒸鱼豉油', amount: '5克' }, { name: '香油', amount: '2克' }, { name: '葱', amount: '3克' }], taste: '清淡' },
+                { name: '清炒土豆丝', description: '土豆切细丝，用清水泡去淀粉，热油爆香蒜末，下土豆丝大火快炒，加盐、醋调味，保持清脆。', ingredientsDetail: [{ name: '土豆', amount: '400克' }, { name: '蒜', amount: '10克' }, { name: '食用油', amount: '15克' }, { name: '盐', amount: '3克' }, { name: '醋', amount: '5克' }, { name: '葱', amount: '5克' }], taste: '清淡' },
+                { name: '醋溜土豆丝', description: '土豆丝焯水后迅速过凉，热油爆香干辣椒和蒜，倒入土豆丝翻炒，淋入醋和盐，酸爽开胃。', ingredientsDetail: [{ name: '土豆', amount: '400克' }, { name: '干辣椒', amount: '5克' }, { name: '蒜', amount: '10克' }, { name: '食用油', amount: '15克' }, { name: '醋', amount: '10克' }, { name: '盐', amount: '3克' }, { name: '葱', amount: '5克' }], taste: '清淡' },
+                { name: '土豆泥', description: '土豆蒸熟压成泥，锅中热黄油炒香洋葱末，加入土豆泥翻炒，加盐、黑胡椒调味，口感绵密。', ingredientsDetail: [{ name: '土豆', amount: '500克' }, { name: '洋葱', amount: '50克' }, { name: '黄油', amount: '20克' }, { name: '盐', amount: '3克' }, { name: '黑胡椒', amount: '2克' }], taste: '清淡' },
+                { name: '土豆炖牛肉', description: '牛肉切块焯水，与土豆、胡萝卜一同炖煮，加八角、酱油、糖，小火慢炖至软烂。', ingredientsDetail: [{ name: '牛肉', amount: '500克' }, { name: '土豆', amount: '300克' }, { name: '胡萝卜', amount: '100克' }, { name: '八角', amount: '2个' }, { name: '生抽', amount: '20克' }, { name: '老抽', amount: '10克' }, { name: '冰糖', amount: '15克' }, { name: '姜', amount: '10克' }, { name: '葱', amount: '5克' }], taste: '重口' },
+                { name: '红烧肉', description: '五花肉切块煸炒至金黄，加冰糖炒糖色，加料酒、生抽、老抽、姜片，小火焖煮40分钟。', ingredientsDetail: [{ name: '猪肉', amount: '500克' }, { name: '冰糖', amount: '20克' }, { name: '料酒', amount: '15克' }, { name: '生抽', amount: '20克' }, { name: '老抽', amount: '10克' }, { name: '姜', amount: '10克' }, { name: '八角', amount: '2个' }, { name: '葱', amount: '5克' }], taste: '重口' },
+                { name: '香辣鱿鱼须', description: '鱿鱼须焯水，热油爆香姜蒜、干辣椒、花椒，加入鱿鱼须大火爆炒，加生抽、蚝油、孜然粉。', ingredientsDetail: [{ name: '鱿鱼', amount: '400克' }, { name: '干辣椒', amount: '10克' }, { name: '花椒', amount: '3克' }, { name: '蒜', amount: '10克' }, { name: '姜', amount: '5克' }, { name: '生抽', amount: '15克' }, { name: '蚝油', amount: '10克' }, { name: '孜然粉', amount: '3克' }, { name: '葱', amount: '5克' }], taste: '重口' },
+                { name: '小鸡炖蘑菇', description: '鸡肉焯水，与泡发的香菇一同炖煮，加粉条、姜片、酱油，炖至鸡肉酥烂。', ingredientsDetail: [{ name: '鸡肉', amount: '500克' }, { name: '香菇', amount: '100克' }, { name: '粉条', amount: '80克' }, { name: '姜', amount: '10克' }, { name: '生抽', amount: '20克' }, { name: '老抽', amount: '5克' }, { name: '八角', amount: '2个' }, { name: '葱', amount: '5克' }], taste: '重口' },
+                { name: '麻辣火锅', description: '锅中加入麻辣锅底、姜蒜、干辣椒煮开，下入各种肉类、海鲜、蔬菜、菌菇涮煮，蘸香油蒜泥碟。', ingredientsDetail: [{ name: '麻辣锅底', amount: '1包' }, { name: '姜', amount: '10克' }, { name: '蒜', amount: '15克' }, { name: '干辣椒', amount: '5克' }, { name: '香油', amount: '10克' }, { name: '蒜泥', amount: '10克' }, { name: '葱', amount: '5克' }, { name: '肥牛卷', amount: '200克' }, { name: '羊肉卷', amount: '200克' }, { name: '毛肚', amount: '150克' }, { name: '黄喉', amount: '100克' }, { name: '虾滑', amount: '150克' }, { name: '藕片', amount: '100克' }, { name: '金针菇', amount: '100克' }, { name: '娃娃菜', amount: '100克' }, { name: '宽粉', amount: '100克' }], taste: '重口' },
+                { name: '金针菇肥牛卷', description: '金针菇卷入肥牛片中，平底锅煎至两面金黄，淋入照烧汁（酱油、糖、料酒）煮至收汁。', ingredientsDetail: [{ name: '牛肉', amount: '200克' }, { name: '金针菇', amount: '150克' }, { name: '照烧汁', amount: '30克' }, { name: '生抽', amount: '10克' }, { name: '料酒', amount: '10克' }, { name: '白糖', amount: '5克' }, { name: '蒜', amount: '5克' }], taste: '重口' },
+                { name: '土豆烧排骨', description: '排骨焯水，炒糖色后加姜蒜、八角，加水炖30分钟，加入土豆块继续炖15分钟，收汁。', ingredientsDetail: [{ name: '排骨', amount: '500克' }, { name: '土豆', amount: '300克' }, { name: '冰糖', amount: '15克' }, { name: '姜', amount: '10克' }, { name: '蒜', amount: '5克' }, { name: '八角', amount: '2个' }, { name: '生抽', amount: '20克' }, { name: '老抽', amount: '5克' }, { name: '葱', amount: '5克' }], taste: '重口' },
+                { name: '葱爆羊肉', description: '羊肉片快速翻炒，加入大葱段爆炒，加生抽、孜然粉调味，出锅前撒香菜。', ingredientsDetail: [{ name: '羊肉', amount: '300克' }, { name: '葱', amount: '100克' }, { name: '孜然粉', amount: '5克' }, { name: '生抽', amount: '15克' }, { name: '料酒', amount: '10克' }, { name: '姜', amount: '5克' }, { name: '香菜', amount: '5克' }], taste: '重口' },
+                { name: '尖椒炒肉', description: '尖椒切段，猪肉切片，热油爆香蒜末、干辣椒，下肉片炒至变色，加入尖椒翻炒，加生抽、盐。', ingredientsDetail: [{ name: '猪肉', amount: '200克' }, { name: '小尖椒', amount: '150克' }, { name: '蒜', amount: '10克' }, { name: '干辣椒', amount: '3克' }, { name: '生抽', amount: '15克' }, { name: '盐', amount: '2克' }, { name: '食用油', amount: '10克' }], taste: '重口' },
+                { name: '麻辣干锅', description: '各种火锅配菜（藕片、土豆片、午餐肉、蟹肉棒等）先焯水，热油爆香干辣椒、花椒、姜蒜，加入食材大火翻炒，加生抽、蚝油、孜然粉，香辣过瘾。', ingredientsDetail: [{ name: '藕片', amount: '150克' }, { name: '土豆片', amount: '150克' }, { name: '午餐肉', amount: '100克' }, { name: '蟹肉棒', amount: '100克' }, { name: '干辣椒', amount: '10克' }, { name: '花椒', amount: '3克' }, { name: '蒜', amount: '10克' }, { name: '姜', amount: '5克' }, { name: '生抽', amount: '15克' }, { name: '蚝油', amount: '10克' }, { name: '孜然粉', amount: '5克' }, { name: '食用油', amount: '20克' }], taste: '重口' },
+                { name: '照烧鸡腿', description: '鸡腿去骨，用照烧汁、生抽、料酒腌制，平底锅煎至两面金黄，倒入剩余照烧汁煮至浓稠，撒芝麻。', ingredientsDetail: [{ name: '鸡肉', amount: '400克' }, { name: '照烧汁', amount: '50克' }, { name: '生抽', amount: '10克' }, { name: '料酒', amount: '10克' }, { name: '姜', amount: '5克' }, { name: '蒜', amount: '5克' }, { name: '白芝麻', amount: '2克' }], taste: '重口' },
+                { name: '酱爆肉丁', description: '猪肉切丁，用黄豆酱、甜面酱、生抽腌制，热油爆香姜蒜，下肉丁滑熟，加入黄瓜丁翻炒出锅。', ingredientsDetail: [{ name: '猪肉', amount: '300克' }, { name: '黄豆酱', amount: '20克' }, { name: '甜面酱', amount: '10克' }, { name: '生抽', amount: '5克' }, { name: '黄瓜', amount: '1根' }, { name: '姜', amount: '5克' }, { name: '蒜', amount: '5克' }], taste: '重口' },
+                { name: '烧烤风味烤翅', description: '鸡翅划刀，用烧烤汁、烧烤料、生抽、料酒腌制2小时，烤箱200度烤20分钟，翻面再烤10分钟。', ingredientsDetail: [{ name: '鸡肉', amount: '500克' }, { name: '烧烤汁', amount: '30克' }, { name: '烧烤料', amount: '15克' }, { name: '生抽', amount: '10克' }, { name: '料酒', amount: '10克' }, { name: '蒜', amount: '5克' }, { name: '姜', amount: '5克' }], taste: '重口' },
+                { name: '麻酱拌面', description: '面条煮熟过凉，芝麻酱用温水调开，加生抽、醋、蒜末、辣椒油拌匀，淋在面上，撒黄瓜丝。', ingredientsDetail: [{ name: '面条', amount: '200克' }, { name: '芝麻酱', amount: '30克' }, { name: '生抽', amount: '10克' }, { name: '醋', amount: '5克' }, { name: '蒜', amount: '5克' }, { name: '辣椒油', amount: '5克' }, { name: '黄瓜', amount: '半根' }], taste: '重口' },
+                { name: '蒜蓉辣酱烤生蚝', description: '生蚝洗净，铺上蒜蓉辣酱、蒜末、葱花，烤箱200度烤8-10分钟，鲜美多汁。', ingredientsDetail: [{ name: '扇贝', amount: '6只' }, { name: '蒜蓉辣酱', amount: '20克' }, { name: '蒜', amount: '10克' }, { name: '葱花', amount: '5克' }, { name: '食用油', amount: '5克' }], taste: '重口' },
+                { name: '清蒸鲈鱼', description: '鲈鱼洗净，鱼身划刀，塞入姜片，淋上蒸鱼豉油，蒸10分钟，出锅撒葱花，淋热油。', ingredientsDetail: [{ name: '鱼', amount: '1条（约500克）' }, { name: '姜', amount: '10克' }, { name: '葱', amount: '10克' }, { name: '蒸鱼豉油', amount: '20克' }, { name: '食用油', amount: '15克' }], taste: '清淡' },
+                { name: '红烧鱼块', description: '鱼切块，煎至两面金黄，加姜蒜、干辣椒、生抽、老抽、糖、水炖煮10分钟，收汁撒葱花。', ingredientsDetail: [{ name: '鱼', amount: '500克' }, { name: '姜', amount: '10克' }, { name: '蒜', amount: '10克' }, { name: '干辣椒', amount: '5克' }, { name: '生抽', amount: '15克' }, { name: '老抽', amount: '5克' }, { name: '糖', amount: '5克' }, { name: '葱', amount: '5克' }, { name: '食用油', amount: '20克' }], taste: '重口' },
+                { name: '干煸豆角', description: '豆角切段，热油炸至表面起皱，捞出。锅中留底油，爆香干辣椒、花椒、蒜末，倒入豆角，加生抽、盐、糖翻炒均匀。', ingredientsDetail: [{ name: '豆角', amount: '400克' }, { name: '干辣椒', amount: '10克' }, { name: '花椒', amount: '3克' }, { name: '蒜', amount: '10克' }, { name: '生抽', amount: '10克' }, { name: '盐', amount: '2克' }, { name: '糖', amount: '3克' }, { name: '食用油', amount: '适量（炸豆角用）' }], taste: '重口' },
+                { name: '豆角炒肉', description: '豆角切段焯水，猪肉切片，热油爆香姜蒜，下肉片炒至变色，加入豆角翻炒，加生抽、盐调味。', ingredientsDetail: [{ name: '豆角', amount: '300克' }, { name: '猪肉', amount: '150克' }, { name: '姜', amount: '5克' }, { name: '蒜', amount: '5克' }, { name: '生抽', amount: '10克' }, { name: '盐', amount: '2克' }, { name: '食用油', amount: '15克' }], taste: '重口' },
+                { name: '口蘑炒肉片', description: '口蘑切片，猪肉切片，热油爆香蒜末，下肉片滑熟，加入口蘑翻炒，加生抽、盐、蚝油调味。', ingredientsDetail: [{ name: '口蘑', amount: '300克' }, { name: '猪肉', amount: '150克' }, { name: '蒜', amount: '10克' }, { name: '生抽', amount: '10克' }, { name: '盐', amount: '2克' }, { name: '蚝油', amount: '5克' }, { name: '食用油', amount: '15克' }], taste: '清淡' },
+                { name: '香辣口蘑', description: '口蘑切片，热油爆香干辣椒、花椒、蒜末，下口蘑大火快炒，加生抽、孜然粉、辣椒粉调味。', ingredientsDetail: [{ name: '口蘑', amount: '300克' }, { name: '干辣椒', amount: '5克' }, { name: '花椒', amount: '2克' }, { name: '蒜', amount: '10克' }, { name: '生抽', amount: '10克' }, { name: '孜然粉', amount: '3克' }, { name: '辣椒粉', amount: '3克' }, { name: '食用油', amount: '15克' }], taste: '重口' },
+                { name: '洋葱炒鸡蛋', description: '洋葱切丝，鸡蛋打散。热油炒熟鸡蛋盛出，锅中留底油炒软洋葱，加入鸡蛋，加盐、生抽翻炒均匀。', ingredientsDetail: [{ name: '洋葱', amount: '1个' }, { name: '鸡蛋', amount: '3个' }, { name: '盐', amount: '2克' }, { name: '生抽', amount: '5克' }, { name: '食用油', amount: '15克' }], taste: '清淡' },
+                { name: '清炒胡萝卜', description: '胡萝卜切片，热油爆香蒜末，下胡萝卜翻炒，加少量水焖软，加盐调味。', ingredientsDetail: [{ name: '胡萝卜', amount: '300克' }, { name: '蒜', amount: '10克' }, { name: '盐', amount: '2克' }, { name: '食用油', amount: '15克' }], taste: '清淡' },
+                { name: '蒜蓉菠菜', description: '菠菜洗净，热油爆香蒜末，下菠菜快速翻炒，加盐、蚝油调味。', ingredientsDetail: [{ name: '菠菜', amount: '300克' }, { name: '蒜', amount: '10克' }, { name: '盐', amount: '2克' }, { name: '蚝油', amount: '5克' }, { name: '食用油', amount: '15克' }], taste: '清淡' }
+            ];
+
+            // 推荐菜谱主逻辑（返回多个菜谱）
+            function recommendRecipe() {
+                const selected = getSelectedIngredients();
+                const taste = document.querySelector('input[name="taste"]:checked').value;
+
+                const resultDiv = document.getElementById('recipeResult');
+                if (selected.length === 0) {
+                    resultDiv.innerHTML = `<div class="no-recipe">🥺 请至少选择一种食材</div>`;
+                    return;
+                }
+
+                // 筛选出至少包含一种用户所选食材的菜谱
+                const candidateRecipes = recipeLibrary.filter(recipe => {
+                    const recipeIngredientNames = recipe.ingredientsDetail.map(i => i.name);
+                    return selected.some(sel => recipeIngredientNames.includes(sel));
+                });
+
+                if (candidateRecipes.length === 0) {
+                    resultDiv.innerHTML = `<div class="no-recipe">😕 暂时没有包含这些食材的菜谱，试试其他组合</div>`;
+                    return;
+                }
+
+                // 为每个候选菜谱计算包含用户所选食材的数量，并计算是否口味匹配
+                const scoredRecipes = candidateRecipes.map(recipe => {
+                    const recipeIngredientNames = recipe.ingredientsDetail.map(i => i.name);
+                    const matchCount = selected.filter(sel => recipeIngredientNames.includes(sel)).length;
+                    const tasteMatch = recipe.taste === taste ? 1 : 0;
+                    return { recipe, matchCount, tasteMatch };
+                });
+
+                // 排序：先按matchCount降序，再按tasteMatch降序
+                scoredRecipes.sort((a, b) => {
+                    if (a.matchCount !== b.matchCount) return b.matchCount - a.matchCount;
+                    return b.tasteMatch - a.tasteMatch;
+                });
+
+                // 取前6个菜谱（可调整）
+                const topRecipes = scoredRecipes.slice(0, 6).map(item => item.recipe);
+
+                // 生成多卡片HTML
+                let cardsHTML = '';
+                topRecipes.forEach(recipe => {
+                    let ingredientsHTML = '';
+                    if (recipe.ingredientsDetail) {
+                        ingredientsHTML = '<div class="ingredients-title">🥄 配料</div><div class="ingredients-grid">';
+                        recipe.ingredientsDetail.forEach(ing => {
+                            ingredientsHTML += `<div class="ingredient-item-detail"><span>${ing.name}</span><span class="amount">${ing.amount}</span></div>`;
+                        });
+                        ingredientsHTML += '</div>';
+                    }
+
+                    cardsHTML += `
+                        <div class="recipe-card">
+                            <div class="recipe-name">🍲 ${recipe.name}</div>
+                            <div class="recipe-desc">${recipe.description}</div>
+                            ${ingredientsHTML}
+                            <div class="recipe-meta">
+                                <span>👅 口味：${recipe.taste}</span>
+                            </div>
+                            <a href="https://mobile.yangkeduo.com/" target="_blank" class="buy-link">🛒 去多多买菜选购</a>
+                        </div>
+                    `;
+                });
+
+                resultDiv.innerHTML = cardsHTML;
+            }
+
+            // 初始化渲染
+            renderIngredients();
+
+            // 监听推荐按钮
+            document.getElementById('recommendBtn').addEventListener('click', recommendRecipe);
+        })();
+    </script>
+</body>
+</html>
